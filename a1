@@ -1,0 +1,50 @@
+create table student1(snum int primary key,sname varchar(200) ,major varchar(200),slevel varchar(200),age int)
+create table faculty (fid int primary key,fname varchar(150),deptid int);
+create table class1(cname varchar(100) primary key,meets_at varchar(200),room varchar(100),fid int references faculty(fid))
+create table enroll(snum int references student1(snum),cname varchar(100) references class1(cname))
+insert into student1 values(101,'ravi','ise','jr',21)
+desc student1
+select *from student1
+insert into student1 values(102,'abinash','ieee','sr',23)
+insert into student1 values(103,'ankit','ise','jr',22)
+insert into student1 values(104,'vaibhav','autom','sr',22)
+
+insert into student1 values(106,'anuj','ieee','jr',21)
+select *from student1
+insert into faculty values(1111,'harshit',011)
+insert into faculty values(1112,'rahul',012)
+insert into faculty values(1113,'satyam',011)
+insert into faculty values(1114,'rohan',013)
+insert into faculty values(1115,'aditya',014)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+insert into class1 values('c++','1pm','R127',1111)
+insert into class1 values('java','2pm','R128',1112)
+insert into class1 values('dbms','2pm','R126',1113)
+insert into class1 values('c','12pm','R129',1114)
+insert into class1 values('html','2pm','R129',1115)
+insert into class1 values('.net','10pm','R128',1115)
+insert into class1 values('cobol','2pm','R128',1111)
+insert into class1 values('css','11pm','R126',1111)
+insert into class1 values('cn','3pm','R129',1111)
+select *from class1
+insert into enroll values(101,'c++')
+insert into enroll values(102,'java')
+insert into enroll values(101,'html')
+insert into enroll values(105,'dbms')
+insert into enroll values(104,'c')
+insert into enroll values(105,'c++')
+insert into enroll values(102,'c++')
+insert into enroll values(104,'c++')
+insert into enroll values(106,'c++')
+select *from enroll
+
+
+select distinct s1.sname from student1 s1,enroll e,class1 c,faculty f where c.fid=f.fid and c.cname=e.cname and s1.snum=e.snum and s1.slevel='jr' and f.fname='harshit';
+
+select distinct c.cname from class1 c where room='r128' or c.cname in(select e.cname from enroll e group by e.cname having count(*)>=5);
+
+
+
+select f.fname from faculty f where fid in(select fid from class1 group by fid having count(distinct room)=(select count(distinct room) from class1))
+
+select f.fname from faculty f where fid in(select distinct(fid) from class1 c,enroll e where c.cname=e.cname group by fid having count(fid)<5)
